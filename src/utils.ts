@@ -7,6 +7,14 @@ export interface processedScreenTime {
 }
 
 export function processScreenTime(sortedReports: any[]): processedScreenTime {
+    if (sortedReports.length === 0) {
+        return {
+            screenTime: 0,
+            worstCycle: 0,
+            cycles: [],
+        }
+    }
+
     let screenTime = 0
     let worstCycle = 0
     const cycles: number[] = []
@@ -15,7 +23,9 @@ export function processScreenTime(sortedReports: any[]): processedScreenTime {
     let latestRecord: Date = new Date(sortedReports[0].recorded_at)
 
     const finishCycle = () => {
-        cycles.push(cycleSizeBuffer)
+        if (cycleSizeBuffer > 600000) {
+            cycles.push(cycleSizeBuffer)
+        }
         worstCycle = Math.max(cycleSizeBuffer, worstCycle)
         breakSizeBuffer = 0
         cycleSizeBuffer = 0
