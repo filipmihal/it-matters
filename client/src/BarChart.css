@@ -1,0 +1,13 @@
+.barChartTooltip {
+    background-color: rgba(59, 72, 80, 0.95);
+    color: white;
+    border-radius: 8px;
+    padding: 5px;
+    width: 120px;
+}
+
+.barChartTooltip p,
+.barChartTooltip h3 {
+    margin: 0;
+    padding: 2px;
+}
