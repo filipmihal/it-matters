@@ -1,10 +1,13 @@
 import crypto from 'crypto'
 import express from 'express'
 import Knex from 'knex'
+import path from 'path'
 import { processScreenTime } from './utils'
-const app = express()
-const PORT = 8080
 
+const app = express()
+const PORT = process.env.PORT || 8080
+
+app.use(express.static(path.join(__dirname, '../client', 'build')))
 app.use(express.json())
 const userRouter = express.Router()
 
@@ -64,6 +67,13 @@ knex.raw('SELECT * FROM users').then(() => {
     console.log('DB is connected :)')
 })
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'))
+})
+
+/**
+ * server receives report data from a client
+ */
 userRouter.post('/user/:id/report', async (req, res) => {
     const userId = req.params.id
     const reports = req.body.report_data
@@ -84,14 +94,41 @@ userRouter.post('/user/:id/report', async (req, res) => {
     return res.status(200).json(reports)
 })
 
+// TODO: move to tasks
 userRouter.get('/user/:id/report', async (req, res) => {
     const userId = req.params.id
     const reports = await knex('screen_time_raw')
         .where('user_id', userId)
-        .where(knex.raw('CAST(recorded_at AS DATE) = CAST(now() AS DATE)'))
+        .where(knex.raw('CAST(recorded_at AS DATE) = CAST(? AS DATE)', new Date('2021-01-29')))
         .select('*')
         .orderBy('recorded_at', 'asc')
     const stats = processScreenTime(reports)
+
+    await knex('screen_time_stats').insert({
+        user_id: userId,
+        overall_screen_time_ms: stats.screenTime,
+        worst_cycle_ms: stats.worstCycle,
+        correct_cycles: stats.cycles.length,
+        day: new Date('2021-01-29'),
+    })
+    return res.status(200).json(stats)
+})
+
+/**
+ * API endpoint to query all stats
+ */
+userRouter.get('/user/:id/stats', async (req, res) => {
+    const userId = req.params.id
+
+    const stats = await knex('screen_time_stats')
+        .where('user_id', userId)
+        .select(
+            'overall_screen_time_ms',
+            'correct_cycles',
+            'worst_cycle_ms',
+            knex.raw("to_char(day, 'YYYY-MM-DD') as day"),
+        )
+    console.log(stats)
     return res.status(200).json(stats)
 })
 
