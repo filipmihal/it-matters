@@ -1,34 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Line } from 'react-chartjs-2'
-import { getStats } from './StatsService'
-
-const data = {
-    labels: ['1', '2', '3', '4', '5', '6'],
-    datasets: [
-        {
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            fill: false,
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgba(255, 99, 132, 0.2)',
-        },
-    ],
-}
-
-const options = {
-    scales: {
-        yAxes: [
-            {
-                ticks: {
-                    beginAtZero: true,
-                },
-            },
-        ],
-    },
-}
+import BarChart from './BarChart'
+import { get30daysScreenTimeChartData, get30daysWorstCycleChartData, getStats, selectByDateRange } from './StatsService'
 
 function App() {
-    const [statistics, setStatistics] = useState({})
+    const [statistics, setStatistics]: any = useState(undefined)
 
     useEffect(() => {
         getStats()
@@ -39,24 +14,36 @@ function App() {
                 console.log(reason)
             })
     }, [])
-    console.log(statistics)
+    console.log(selectByDateRange(statistics?.screenTimes ?? [], 30))
     return (
         <div className="App">
-            <div className="header">
-                <h1 className="title">Line Chart</h1>
-                <div className="links">
-                    <a
-                        className="btn btn-gh"
-                        href="https://github.com/reactchartjs/react-chartjs-2/blob/react16/example/src/charts/Line.js"
-                    >
-                        Github Source
-                    </a>
-                </div>
+            <div>
+                <h2>Worst cycle size (past 30 days)</h2>
+                {statistics && (
+                    <BarChart
+                        title={'Worst cycle'}
+                        xTitle={'days'}
+                        yTitle={'Worst cycle / minutes'}
+                        yDomain={[0, 240]}
+                        chartData={get30daysWorstCycleChartData(statistics.worstCycles)}
+                    />
+                )}
             </div>
-            <Line data={data} />
+            <div>
+                <h2>Screen time (past 30 days)</h2>
+                {statistics && (
+                    <BarChart
+                        title={'Screen time'}
+                        xTitle={'days'}
+                        yTitle={'Screen time / minutes'}
+                        yDomain={[0, 800]}
+                        chartData={get30daysScreenTimeChartData(statistics.screenTimes)}
+                    />
+                )}
+            </div>
         </div>
+        // TODO: streak
     )
 }
-// https://react-charts.tanstack.com/docs/installation
 
 export default App

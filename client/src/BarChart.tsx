@@ -4,6 +4,10 @@ import './BarChart.css'
 import { getDateFormat } from './StatsService'
 interface IProps {
     chartData: Array<{ x: number; y: number }>
+    yDomain: Array<number>
+    title: string
+    xTitle: string
+    yTitle: string
 }
 
 export default function BarChart(props: IProps) {
@@ -13,16 +17,16 @@ export default function BarChart(props: IProps) {
     }>()
 
     return (
-        <div style={{ position: 'relative' }}>
-            <XYPlot height={400} xType="time" width={1400} stackBy="y" yDomain={[0, 800]}>
-                <XAxis title={'last 30 days'} tickTotal={10} tickFormat={getDateFormat} />
-                <YAxis title={'screen time/minutes'} />
+        <div style={{ position: 'relative', width: '1000px' }}>
+            <XYPlot height={400} xType="time" width={1000} stackBy="y" yDomain={props.yDomain}>
+                <XAxis tickTotal={10} tickFormat={getDateFormat} />
+                <YAxis title={props.yTitle} />
                 {hoveredPoint && (
                     <Hint value={hoveredPoint}>
                         <div className={'barChartTooltip'}>
-                            <h3>Screen time</h3>
+                            <b>{props.title}</b>
                             <p>
-                                {hoveredPoint.y} mins on {getDateFormat(hoveredPoint.x)}
+                                {hoveredPoint.y} mins <br /> on {getDateFormat(hoveredPoint.x)}
                             </p>
                         </div>
                     </Hint>
