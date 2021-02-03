@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start:dev": "nodemon src/server.ts",
         "start:prod": "node dist/server.js",
-        "build": "tsc",
+        "build": "yarn tsc",
         "eslint": "eslint --ext .jsx,.js,.tsx,.ts src/",
         "eslint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix",
         "knex:migrate:make": "knex migrate:make -x ts",
