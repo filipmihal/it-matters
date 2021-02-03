@@ -7,7 +7,7 @@ import { processScreenTime } from './utils'
 const app = express()
 const PORT = process.env.PORT || 8080
 
-app.use(express.static(path.join(__dirname, '../client', 'build')))
+app.use(express.static(path.join(__dirname, '../../client', 'build')))
 app.use(express.json())
 const userRouter = express.Router()
 
@@ -16,6 +16,12 @@ const hash = (key: string, salt: string): string => {
     hashFunc.update(key)
     return hashFunc.digest('hex')
 }
+
+const knex = Knex({
+    client: 'pg',
+    connection: process.env.DATABASE_URL || 'postgres://postgres:password@localhost:5432/postgres',
+    acquireConnectionTimeout: 2000,
+})
 
 /**
  * Each request in userRouter should include a URL param userId
@@ -49,18 +55,6 @@ userRouter.use('/user/:id', async function (req, res, next) {
     } else {
         return res.sendStatus(401)
     }
-})
-
-const knex = Knex({
-    client: 'pg',
-    connection: {
-        user: 'postgres',
-        password: 'password',
-        host: '127.0.0.1',
-        port: 5432,
-        database: 'postgres',
-    },
-    acquireConnectionTimeout: 2000,
 })
 
 knex.raw('SELECT * FROM users').then(() => {

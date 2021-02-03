@@ -1,11 +1,6 @@
 module.exports = {
     client: 'postgresql',
-    connection: {
-        database: 'postgres',
-        user: 'postgres',
-        password: 'password',
-        port: 5432,
-    },
+    connection: process.env.DATABASE_URL || 'postgres://postgres:password@localhost:5432/postgres',
     pool: {
         min: 2,
         max: 10,
