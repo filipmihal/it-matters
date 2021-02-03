@@ -7,7 +7,7 @@ interface IStatsRaw {
 export async function fetchStats(userId: string): Promise<IStatsRaw[]> {
     const response = await fetch(`/api/user/${userId}/stats`, {
         headers: {
-            Authorization: 'Bearer ',
+            Authorization: 'Bearer n2r5u8x/A?D(G+KbPeShVmYp3s6v9y$B&E)H@McQfTjWnZr4t7w!z%C*F-JaNdRg',
         },
     })
     if (response.ok) {
