@@ -28,7 +28,6 @@ const knex = Knex({
  */
 userRouter.use('/user/:id', async function (req, res, next) {
     const userId = req.params.id
-    console.log('user id: ', userId)
     if (!userId) {
         return res.status(400).send('Missing user id')
     }
@@ -50,7 +49,7 @@ userRouter.use('/user/:id', async function (req, res, next) {
 
     const userKey = (await knex('users').where('id', userId).select('api_key').first()).api_key
 
-    if (hash(token, 'J@NcRfTjWnZr4u7x!A%D*G-KaPdSgVkX') === userKey) {
+    if (hash(token, process.env.HASH || 'J@NcRfTjWnZr4u7x!A%D*G-KaPdSgVkX') === userKey) {
         return next()
     } else {
         return res.sendStatus(401)
@@ -71,7 +70,6 @@ app.get('/', (req, res) => {
 userRouter.post('/user/:id/report', async (req, res) => {
     const userId = req.params.id
     const reports = req.body.report_data
-    console.log(reports)
     if (!reports) {
         return res.sendStatus(400)
     }
@@ -93,7 +91,7 @@ userRouter.get('/user/:id/report', async (req, res) => {
     const userId = req.params.id
     const reports = await knex('screen_time_raw')
         .where('user_id', userId)
-        .where(knex.raw('CAST(recorded_at AS DATE) = CAST(? AS DATE)', new Date('2021-01-29')))
+        .where(knex.raw('CAST(recorded_at AS DATE) = CAST(? AS DATE)', new Date()))
         .select('*')
         .orderBy('recorded_at', 'asc')
     const stats = processScreenTime(reports)
@@ -103,7 +101,7 @@ userRouter.get('/user/:id/report', async (req, res) => {
         overall_screen_time_ms: stats.screenTime,
         worst_cycle_ms: stats.worstCycle,
         correct_cycles: stats.cycles.length,
-        day: new Date('2021-01-29'),
+        day: new Date(),
     })
     return res.status(200).json(stats)
 })
@@ -122,12 +120,11 @@ userRouter.get('/user/:id/stats', async (req, res) => {
             'worst_cycle_ms',
             knex.raw("to_char(day, 'YYYY-MM-DD') as day"),
         )
-    console.log(stats)
     return res.status(200).json(stats)
 })
 
 app.listen(PORT, () => {
-    console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`)
+    console.log(`⚡️[server]: Server is running :)`)
 })
 
 app.use('/api', userRouter)
