@@ -4,10 +4,10 @@ interface IStatsRaw {
     worst_cycle_ms: number
     day: string
 }
-export async function fetchStats(userId: string): Promise<IStatsRaw[]> {
+export async function fetchStats(userId: string, APIKey: string): Promise<IStatsRaw[]> {
     const response = await fetch(`/api/user/${userId}/stats`, {
         headers: {
-            Authorization: 'Bearer n2r5u8x/A?D(G+KbPeShVmYp3s6v9y$B&E)H@McQfTjWnZr4t7w!z%C*F-JaNdRg',
+            Authorization: `Bearer ${APIKey}`,
         },
     })
     if (response.ok) {

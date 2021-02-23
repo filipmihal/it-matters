@@ -1,9 +1,8 @@
 import { fetchStats } from './API'
 
 // convert stats to meaningful format
-export async function getStats() {
-    const userId = '9ce50074-7c9f-43d8-b4de-3298ee5c8b86'
-    const stats = await fetchStats(userId)
+export async function getStats(credentials: any) {
+    const stats = await fetchStats(credentials.userId, credentials.APIKey)
     const screenTimes = stats.map((segment) => {
         return { day: segment.day, val: segment.overall_screen_time_ms }
     })
@@ -50,5 +49,3 @@ export function get30daysWorstCycleChartData(data: any[]): { x: number; y: numbe
 export function get30daysScreenTimeChartData(data: any[]): { x: number; y: number; color?: string }[] {
     return convertToChartFormat(selectByDateRange(data, 30), 1000 * 60 * 60 * 9)
 }
-
-/* TODO: Add conditional color for bars which reach certain threshold */
