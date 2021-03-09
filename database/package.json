@@ -3,9 +3,10 @@
     "version": "1.0.0",
     "license": "MIT",
     "scripts": {
-        "knex:migrate:make": "knex migrate:make -x ts",
-        "knex:migrate:latest": "knex migrate:latest",
-        "knex:migrate:rollback": "knex migrate:rollback"
+        "migrate:make": "knex migrate:make -x ts",
+        "migrate:latest": "knex migrate:latest",
+        "migrate:rollback": "knex migrate:rollback",
+        "seed:run": "knex seed:run"
     },
     "dependencies": {
         "knex": "^0.21.14",
