@@ -56,9 +56,6 @@ userRouter.use('/user/:id', async function (req, res, next) {
     }
 })
 
-knex.raw('SELECT * FROM users').then(() => {
-    console.log('DB is connected :)')
-})
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build', 'index.html'))
