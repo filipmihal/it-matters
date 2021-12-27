@@ -31,7 +31,7 @@ My vision is getting worse and worse, my eyes often feel tired after a long work
 
 ### How to run the Python client
 
-1. Clone the latest code from `it-matters-client` repository.
+1. Clone the latest code from `it-matters-client` repository or `python_client` folder.
 2. Install all requirements to your own environment or create a virtual one.
 3. If you are not using the default user, you need to set the correct parameters in the `main.py` file (USER_ID, API_KEY).
 4. run `python3 main.py`
@@ -39,7 +39,7 @@ My vision is getting worse and worse, my eyes often feel tired after a long work
 
 ### Face detection
 
-As part of the project I have built a copy of Viola Jones algorithm. The code can be found in `custom_face_detection` in `it-matters-client` repository.
+As part of the project I have built a copy of Viola Jones algorithm. The code can be found in `custom_face_detection` in `python_client` folder.
 My model which uses 30 weak classifiers was trained on 60000 pictures and achieved 81% accuracy on the testing data.
 
 <!-- TODO: https://www.rockyourcode.com/docker-postgres-knex-setup/  docker-compose rm -f     docker-compose up --build  -->
