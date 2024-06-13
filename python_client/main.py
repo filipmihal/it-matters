@@ -5,14 +5,10 @@ import datetime
 import requests
 from mtcnn.mtcnn import MTCNN
 
-# SERVER_URL = 'http://127.0.0.1:8080'
-# API_KEY = 'n2r5u8x/A?D(G+KbPeShVmYp3s6v9y$B&E)H@McQfTjWnZr4t7w!z%C*F-JaNdRg'
-# HASH = 2d9648bd064a5fbd9007242278f4b5490c28a79c1e8adb50785452774cfb107b
-# db id = 9ce50074-7c9f-43d8-b4de-3298ee5c8b86
-# USER_ID = '9ce50074-7c9f-43d8-b4de-3298ee5c8b86'
-SERVER_URL = 'https://it-matters-2-me.herokuapp.com'
-API_KEY = 'hqGMS9y5M5hn6$x+r=BNv+E!vqrYB5+M=VvN4ucQzrJ22%N-jv6xdwF-DcfgR6Bv'
-USER_ID = 'fc7deb0a-7353-47fd-91a6-5db263a1782a'
+
+SERVER_URL = 'SERVER_URL'
+API_KEY = 'API_KEY'
+USER_ID = 'USER_ID'
 BATCH_SIZE = 40
 DEFAULT_PERIOD = 8
 QUICK_PERIOD = 1
@@ -23,7 +19,7 @@ detector = MTCNN()
 
 
 def is_looking_at_screen_mtcnn(input_image):
-    return  True if len(detector.detect_faces(input_image)) != 0 else False
+    return True if len(detector.detect_faces(input_image)) != 0 else False
 
 
 def draw_rec_face(input_image):
@@ -80,9 +76,9 @@ while True:
     print('is looking at screen: ', is_watching)
     recorded_at = datetime.datetime.now().astimezone(datetime.timezone.utc)
     batch.append({
-                'is_looking_at_screen': is_watching,
-                'period': period,
-                'recorded_at': recorded_at.isoformat()
+        'is_looking_at_screen': is_watching,
+        'period': period,
+        'recorded_at': recorded_at.isoformat()
     })
     if len(batch) >= BATCH_SIZE:
         print(send_data_to_server(batch))
